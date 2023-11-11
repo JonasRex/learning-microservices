@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-minikube
+spec:
+  selector:
+    app: spring-boot-minikube
+  ports:
+    - protocol: TCP
+      port: 8081 # You can map the service to a different port if needed
+      targetPort: 8081 # Match the target port with your container's exposed port
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-minikube
+spec:
+  replicas: 1 # You can adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: spring-boot-minikube
+  template:
+    metadata:
+      labels:
+        app: spring-boot-minikube
+    spec:
+      containers:
+        - name: spring-boot-minikube
+          image: jonasrex/order-service:latest # Replace with your Docker image name and tag
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081 # Adjust the port if your Spring Boot app listens on a different port
